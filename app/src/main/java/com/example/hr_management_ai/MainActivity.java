@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Start the second activity
                 startActivity(intent);
+
             }
         });
     }
