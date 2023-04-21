@@ -32,6 +32,6 @@
                 android:id="@+id/option3"
                 android:title="Option 3" />
         </menu>
-    </item> />
+    </item>
 
 </menu>
