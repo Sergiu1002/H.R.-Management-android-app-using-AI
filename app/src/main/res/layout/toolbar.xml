@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -13,49 +14,46 @@
         <ImageButton
             android:id="@+id/toolbar_logo_button"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_alignParentStart="true"
-            android:background="matchparent"
+            android:background="#0080FF"
             android:scaleType="fitCenter"
-            android:src="@drawable/INSIGHTFLOW_LOGO_noBG" />
+            android:src="@drawable/insightflow_logo_nobg" />
 
         <ImageButton
             android:id="@+id/toolbar_dropdown_button"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="1dp"
-            android:background="match_parent"
+            android:background="#0080FF"
             android:scaleType="fitCenter"
             android:scaleX="-1"
-            android:src="@drawable/toolbar_dropdown_button"
-            />
+            android:src="@drawable/toolbar_dropdown_button" />
 
         <ImageButton
             android:id="@+id/toolbar_search_button"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_marginStart="1dp"
             android:layout_toEndOf="@+id/toolbar_search_bar"
-            android:background="match_parent"
+            android:background="#0080FF"
             android:scaleType="fitCenter"
-            android:src="@drawable/toolbar_search_button"
-            />
+            android:src="@drawable/toolbar_search_button" />
 
         <EditText
             android:id="@+id/toolbar_search_bar"
             android:layout_width="230dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="3dp"
             android:layout_toEndOf="@+id/toolbar_logo_button"
             android:background="#2196F3"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"
             android:gravity="center_vertical|start"
             android:hint="Search..."
             android:maxLines="1"
             android:textColor="@android:color/black"
-            />
+            android:textSize="20sp" />
 
     </RelativeLayout>
 
