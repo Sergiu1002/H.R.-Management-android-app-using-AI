@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/account_button"
+
+            android:title="Account" />
+        <item
+            android:id="@+id/settings_button"
+
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_bus"
+
+            android:title="TBD" />
+        <item
+            android:id="@+id/nav_plane"
+
+            android:title="TBD" />
+    </group>
+    <item android:title="TBD">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_login"
+
+                    android:title="TBD" />
+            </group>
+        </menu>
+    </item>
+    <item android:title="TBD">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+
+                android:title="TBD" />
+        </menu>
+    </item>
+</menu>
