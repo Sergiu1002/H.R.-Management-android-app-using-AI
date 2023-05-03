@@ -9,28 +9,34 @@
     android:layout_gravity="top"
     >
 
-        <ImageButton
-            android:id="@+id/toolbar_logo_button"
-            android:layout_width="50dp"
-            android:layout_height="48dp"
-            android:layout_alignParentStart="true"
-            android:background="#0080FF"
-            android:scaleType="fitCenter"
-            android:src="@drawable/insightflow_logo_nobg" />
+    <ImageButton
+        android:id="@+id/toolbar_logo_button"
+        android:layout_width="50dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:background="#0080FF"
+        android:contentDescription="@string/toolbar_logo_button"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/insightflow_logo_nobg" />
 
-        <EditText
-            android:padding="6dp"
-            android:id="@+id/toolbar_search_bar"
-            android:layout_width="230dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="3dp"
-            android:layout_toEndOf="@+id/toolbar_logo_button"
-            android:background="#2196F3"
-            android:hint="Search..."
-            android:maxLines="1"
-            android:textColor="@android:color/black"
-            android:textSize="20sp" />
+    <EditText
+        android:id="@+id/toolbar_search_bar"
+        android:layout_width="230dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="3dp"
+        android:layout_toEndOf="@+id/toolbar_logo_button"
+        android:autofillHints=""
+        android:background="#2196F3"
+        android:hint="Search..."
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="6dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#283593"
+        android:textSize="20sp" />
+
     <ImageButton
         android:id="@+id/toolbar_search_button"
         android:layout_width="50dp"
@@ -38,15 +44,19 @@
         android:layout_marginStart="1dp"
         android:layout_toEndOf="@+id/toolbar_search_bar"
         android:background="#0080FF"
+        android:contentDescription="@string/toolbar_search_button"
         android:scaleType="fitCenter"
         android:src="@drawable/toolbar_search_button" />
+
     <ImageButton
         android:id="@+id/toolbar_dropdown_button"
         android:layout_width="50dp"
         android:layout_height="48dp"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentEnd="false"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="1dp"
         android:background="#0080FF"
+        android:contentDescription="@string/toolbar_dropdown_button"
         android:scaleType="fitCenter"
         android:scaleX="-1"
         android:src="@drawable/toolbar_dropdown_button" />

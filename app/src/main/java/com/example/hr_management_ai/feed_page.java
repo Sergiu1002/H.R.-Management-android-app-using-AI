@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,25 +14,31 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
-
-
 import com.google.android.material.navigation.NavigationView;
-
 import java.util.Objects;
+import android.util.Log;
+
 
 public class feed_page extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
+    LinearLayout slidingLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,95 +48,46 @@ public class feed_page extends AppCompatActivity {
         setContentView(R.layout.activity_feed_page);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.navigationView);
         toolbar = findViewById(R.id.toolbar_view);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        slidingLayout = findViewById(R.id.header_with_dropdown);
 
         ImageButton LogoButton = findViewById(R.id.toolbar_logo_button);
         EditText toolbar_search_bar = findViewById(R.id.toolbar_search_bar);
         ImageButton SearchButton = findViewById(R.id.toolbar_search_button);
         ImageButton dropdownButton = findViewById(R.id.toolbar_dropdown_button);
 
+        LayoutInflater inflater = LayoutInflater.from(this);
+        LinearLayout headerLayout = (LinearLayout) inflater.inflate(R.layout.header_with_dropdown, null);
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int headerWidth = (int) (screenWidth * 0.75);
+        headerLayout.setLayoutParams(new DrawerLayout.LayoutParams(headerWidth, ViewGroup.LayoutParams.MATCH_PARENT, GravityCompat.END));
+        drawerLayout.addView(headerLayout);
+        actionBarDrawerToggle.syncState();
 
-        // Inflate the header layout and set it to the navigation view
-        View headerView = LayoutInflater.from(this).inflate(R.layout.header, navigationView, false);
-        navigationView.addHeaderView(headerView);
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
-                    case R.id.nav_bus:
-                        Log.i("MENU_DRAWER_TAG", "Bus item is clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-
-                    case R.id.nav_login:
-                        Log.i("MENU_DRAWER_TAG", "Login item is clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                }
-
-                return true;
-            }
-        });
-
-        // Set a click listener to the dropdown button
         dropdownButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(feed_page.this, view);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.dropdown_menu, popup.getMenu());
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // Handle dropdown menu item clicks here
-                        switch (item.getItemId()) {
-                            case R.id.account_button:
-                                // Handle menu item 1 click
-                                return true;
-                            case R.id.settings_button:
-                                // Handle menu item 2 click
-                                return true;
-                            default:
-                                return false;
-                        }
-                    }
-                });
-                popup.show();
+            public void onClick(View v) {
+                slidingLayout = findViewById(R.id.header_with_dropdown);
+                slidingLayout.animate()
+                        .translationX(-slidingLayout.getWidth() * 3 / 4)
+                        .setDuration(500);
             }
         });
-        /*
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.navigationView);
-        toolbar = findViewById(R.id.toolbar_view);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+        SearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
-                    case R.id.nav_bus:
-                        Log.i("MENU_DRAWER_TAG", "Bus item is clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-
-                    case R.id.nav_login:
-                        Log.i("MENU_DRAWER_TAG", "Login item is clicked");
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                }
-
-                return true;
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Hello, world!", Toast.LENGTH_SHORT).show();
             }
         });
-        */
+        LogoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Hello, world!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

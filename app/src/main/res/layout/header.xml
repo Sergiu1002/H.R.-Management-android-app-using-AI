@@ -17,10 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <ImageButton
             android:id="@+id/profile_picture"
             android:layout_width="75dp"
-            android:layout_height="75dp" />
+            android:layout_height="75dp"
+            android:contentDescription="@string/profile_picture" />
 
         <TextView
             android:layout_width="305dp"

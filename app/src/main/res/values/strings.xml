@@ -2,5 +2,9 @@
     <string name="app_name">HR_MANAGEMENT_AI</string>
     <string name="menu_open">Open</string>
     <string name="menu_close">Close</string>
+    <string name="toolbar_logo_button">toolbar_logo_button</string>
+    <string name="toolbar_search_button">toolbar_search_button</string>
+    <string name="toolbar_dropdown_button">toolbar_dropdown_button</string>
+    <string name="profile_picture">profile_picture</string>
 
 </resources>

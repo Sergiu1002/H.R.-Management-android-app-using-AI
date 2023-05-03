@@ -42,6 +42,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.3.0')
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    implementation 'androidx.slidingpanelayout:slidingpanelayout:1.2.0'
 
 }
 apply plugin: 'com.google.gms.google-services'
