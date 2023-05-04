@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,28 +54,32 @@ public class feed_page extends AppCompatActivity {
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
 
-        slidingLayout = findViewById(R.id.header_with_dropdown);
 
         ImageButton LogoButton = findViewById(R.id.toolbar_logo_button);
         EditText toolbar_search_bar = findViewById(R.id.toolbar_search_bar);
         ImageButton SearchButton = findViewById(R.id.toolbar_search_button);
         ImageButton dropdownButton = findViewById(R.id.toolbar_dropdown_button);
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        LinearLayout headerLayout = (LinearLayout) inflater.inflate(R.layout.header_with_dropdown, null);
+
+        // Step 1: Create your custom layout
+        View popupView = LayoutInflater.from(this).inflate(R.layout.header_with_dropdown, null);
+
+// Step 2: Create the dialog and set its content view
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(popupView);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
         int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        int headerWidth = (int) (screenWidth * 0.75);
-        headerLayout.setLayoutParams(new DrawerLayout.LayoutParams(headerWidth, ViewGroup.LayoutParams.MATCH_PARENT, GravityCompat.END));
-        drawerLayout.addView(headerLayout);
-        actionBarDrawerToggle.syncState();
+        lp.width = (int) (screenWidth * 0.75);
+        lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        lp.gravity = Gravity.END;
+        dialog.getWindow().setAttributes(lp);
+
 
         dropdownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                slidingLayout = findViewById(R.id.header_with_dropdown);
-                slidingLayout.animate()
-                        .translationX(-slidingLayout.getWidth() * 3 / 4)
-                        .setDuration(500);
+                dialog.show();
             }
         });
 
