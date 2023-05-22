@@ -3,44 +3,42 @@ package com.example.hr_management_ai;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
-import android.content.res.Resources;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
-import com.google.android.material.navigation.NavigationView;
-import java.util.Objects;
-import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class feed_page extends AppCompatActivity {
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
+    LinearLayout linearLayout;
     Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    LinearLayout slidingLayout;
+    RecyclerView recyclerView; // Added RecyclerView
+    PostsAdaptor adapter; // Added adapter
+
+    private String Title;
+    private String Description;
+    private String Image;
+    ArrayList<RecyclerModel> list;
+    DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +47,9 @@ public class feed_page extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_feed_page);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
+        linearLayout = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar_view);
-        setSupportActionBar(toolbar);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close);
-
+        recyclerView = findViewById(R.id.recyclerView); // Initialize RecyclerView
 
         ImageButton LogoButton = findViewById(R.id.toolbar_logo_button);
         EditText toolbar_search_bar = findViewById(R.id.toolbar_search_bar);
@@ -61,25 +57,22 @@ public class feed_page extends AppCompatActivity {
         ImageButton dropdownButton = findViewById(R.id.toolbar_dropdown_button);
 
 
-        // Step 1: Create your custom layout
-        View popupView = LayoutInflater.from(this).inflate(R.layout.header_with_dropdown, null);
-
-// Step 2: Create the dialog and set its content view
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(popupView);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        lp.width = (int) (screenWidth * 0.75);
-        lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        lp.gravity = Gravity.END;
-        dialog.getWindow().setAttributes(lp);
-
-
+        recyclerView = findViewById(R.id.recyclerView);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+        list = new ArrayList<>();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new PostsAdaptor(this, list);
+        recyclerView.setAdapter(adapter);
+        for (RecyclerModel item : list) {
+            Log.d("RecyclerView", "Title: " + item.getTitle() + ", Description: " + item.getDescription());
+        }
         dropdownButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                dialog.show();
+            public void onClick(View view) {
+                //showDropdownMenu(view);
+                Toast.makeText(getApplicationContext(), "Hello, world!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(feed_page.this, create_post.class);
+                startActivity(intent);
             }
         });
 
@@ -89,11 +82,36 @@ public class feed_page extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Hello, world!", Toast.LENGTH_SHORT).show();
             }
         });
+
         LogoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Hello, world!", Toast.LENGTH_SHORT).show();
             }
         });
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot1: snapshot.getChildren()){
+                    RecyclerModel recyclerModel = dataSnapshot1.getValue(RecyclerModel.class);
+                    list.add(recyclerModel);
+                }
+                adapter.notifyDataSetChanged();
+
+                // Log the retrieved data
+                for (RecyclerModel model : list) {
+                    Log.d("Data", "Title: " + model.getTitle() + ", Description: " + model.getDescription());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(feed_page.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+        for (RecyclerModel item : list) {
+            Log.d("RecyclerView", "Title: " + item.getTitle() + ", Description: " + item.getDescription());
+        }
+
     }
 }

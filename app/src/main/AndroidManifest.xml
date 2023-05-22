@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +17,7 @@
         android:theme="@style/Theme.HR_MANAGEMENT_AI"
         tools:targetApi="31">
         <activity
-            android:name=".main_page"
+            android:name=".create_post"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
