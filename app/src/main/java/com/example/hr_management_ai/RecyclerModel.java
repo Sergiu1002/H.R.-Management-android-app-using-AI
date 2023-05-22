@@ -9,10 +9,13 @@ public class RecyclerModel {
     String Description;
     String Image;
 
+    RecyclerModel() {
+    }
+
     public RecyclerModel(String title, String description, String image) {
-        Title = title;
-        Description = description;
-        Image = image;
+        this.Title = title;
+        this.Description = description;
+        this.Image = image;
     }
 
     public String getTitle() {
@@ -25,5 +28,17 @@ public class RecyclerModel {
 
     public String getImage() {
         return Image;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public void setImage(String image) {
+        Image = image;
     }
 }

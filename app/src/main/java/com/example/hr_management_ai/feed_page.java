@@ -6,23 +6,41 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
+
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -30,8 +48,12 @@ public class feed_page extends AppCompatActivity {
     LinearLayout linearLayout;
     Toolbar toolbar;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    RecyclerView recyclerView; // Added RecyclerView
+    RecyclerView rview; // Added RecyclerView
     PostsAdaptor adapter; // Added adapter
+
+    private PostsAdaptor postsAdaptor;
+    private DatabaseReference myref;
+    private Context mcontext;
 
     private String Title;
     private String Description;
@@ -49,7 +71,6 @@ public class feed_page extends AppCompatActivity {
 
         linearLayout = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar_view);
-        recyclerView = findViewById(R.id.recyclerView); // Initialize RecyclerView
 
         ImageButton LogoButton = findViewById(R.id.toolbar_logo_button);
         EditText toolbar_search_bar = findViewById(R.id.toolbar_search_bar);
@@ -57,15 +78,19 @@ public class feed_page extends AppCompatActivity {
         ImageButton dropdownButton = findViewById(R.id.toolbar_dropdown_button);
 
 
-        recyclerView = findViewById(R.id.recyclerView);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
-        list = new ArrayList<>();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PostsAdaptor(this, list);
-        recyclerView.setAdapter(adapter);
-        for (RecyclerModel item : list) {
-            Log.d("RecyclerView", "Title: " + item.getTitle() + ", Description: " + item.getDescription());
-        }
+        rview = (RecyclerView)findViewById(R.id.recyclerView);
+        rview.setLayoutManager(new LinearLayoutManager(this));
+
+        FirebaseRecyclerOptions<RecyclerModel> options =
+                new FirebaseRecyclerOptions.Builder<RecyclerModel>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Posts"), RecyclerModel.class)
+                        .build();
+
+        adapter = new PostsAdaptor(options);
+        rview.setAdapter(adapter);
+
+
+
         dropdownButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,29 +114,64 @@ public class feed_page extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Hello, world!", Toast.LENGTH_SHORT).show();
             }
         });
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot1: snapshot.getChildren()){
-                    RecyclerModel recyclerModel = dataSnapshot1.getValue(RecyclerModel.class);
-                    list.add(recyclerModel);
-                }
-                adapter.notifyDataSetChanged();
-
-                // Log the retrieved data
-                for (RecyclerModel model : list) {
-                    Log.d("Data", "Title: " + model.getTitle() + ", Description: " + model.getDescription());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(feed_page.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
-        for (RecyclerModel item : list) {
-            Log.d("RecyclerView", "Title: " + item.getTitle() + ", Description: " + item.getDescription());
-        }
 
     }
+    private void ClearAll(){
+        if(list != null){
+            list.clear();
+            if(postsAdaptor != null){
+                postsAdaptor.notifyDataSetChanged();
+            }
+        }
+        list = new ArrayList<>();
 }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search,menu);
+
+        MenuItem item = menu.findItem(R.id.search_1);
+
+        SearchView searchView = (SearchView)item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                processSearch(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                processSearch(s);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void processSearch(String s) {
+
+        FirebaseRecyclerOptions<RecyclerModel> options =
+                new FirebaseRecyclerOptions.Builder<RecyclerModel>()
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("students"). orderByChild("name").startAt(s).endAt("\uf8ff") ,RecyclerModel.class)
+                        .build();
+        adapter = new PostsAdaptor(options);
+        adapter.startListening();
+        rview.setAdapter(adapter);
+    }
+}
+
