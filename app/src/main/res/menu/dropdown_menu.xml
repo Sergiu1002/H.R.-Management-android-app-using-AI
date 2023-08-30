@@ -10,9 +10,9 @@
 
             android:title="Settings" />
         <item
-            android:id="@+id/nav_bus"
+            android:id="@+id/create_post_button"
 
-            android:title="TBD" />
+            android:title="Create post" />
         <item
             android:id="@+id/nav_plane"
 

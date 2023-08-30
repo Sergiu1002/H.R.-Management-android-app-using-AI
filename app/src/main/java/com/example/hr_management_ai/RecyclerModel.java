@@ -7,15 +7,11 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class RecyclerModel {
     String Title;
     String Description;
-    String Image;
+    String name;
 
-    RecyclerModel() {
-    }
-
-    public RecyclerModel(String title, String description, String image) {
+    public RecyclerModel(String title, String description) {
         this.Title = title;
         this.Description = description;
-        this.Image = image;
     }
 
     public String getTitle() {
@@ -26,10 +22,6 @@ public class RecyclerModel {
         return Description;
     }
 
-    public String getImage() {
-        return Image;
-    }
-
     public void setTitle(String title) {
         Title = title;
     }
@@ -38,7 +30,4 @@ public class RecyclerModel {
         Description = description;
     }
 
-    public void setImage(String image) {
-        Image = image;
-    }
 }
