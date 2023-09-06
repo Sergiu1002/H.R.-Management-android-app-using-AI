@@ -10,23 +10,17 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +36,6 @@ import com.google.firebase.storage.UploadTask;
 public class AccountActivity extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
     Toolbar toolbar;
-    private Uri newProfilePictureUri;
     private Uri selectedImageUri;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private ImageView profile_picture;
@@ -74,21 +67,19 @@ public class AccountActivity extends AppCompatActivity {
 
         String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference userProfileRef = FirebaseDatabase.getInstance().getReference().child("UserProfiles").child(currentUserUID);
-        // Create a reference to the location where the profile picture will be stored
         FirebaseStorage storage = FirebaseStorage.getInstance();
-
         ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri result) {
                         if (result != null) {
-                            selectedImageUri = result; // Update the selected image URI
-                            imageIdentifier = selectedImageUri.toString(); // or selectedImageUri.getLastPathSegment()
+                            selectedImageUri = result;
+                            imageIdentifier = selectedImageUri.toString();
 
                             Glide.with(getApplicationContext())
                                     .load(selectedImageUri)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Optional: Adjust caching strategy
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(profile_picture);
                         }
                     }
@@ -103,7 +94,6 @@ public class AccountActivity extends AppCompatActivity {
                     String gender = dataSnapshot.child("gender").getValue(String.class);
                     String pronouns = dataSnapshot.child("pronouns").getValue(String.class);
 
-                    // Populate the EditText fields with the retrieved data
                     Name.setText(name);
                     JobTitle.setText(jobTitle);
                     Gender.setText(gender);
@@ -121,7 +111,6 @@ public class AccountActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors if necessary
             }
         });
 
@@ -137,11 +126,9 @@ public class AccountActivity extends AppCompatActivity {
                 userProfile.setGender(Gender.getText().toString());
                 userProfile.setPronouns(Pronouns.getText().toString());
 
-                // Check if a new profile picture was selected, and upload it if available
                 if (selectedImageUri != null) {
                     uploadImageToStorage(currentUserUID, selectedImageUri, userProfile);
                 } else {
-                    // Update the user profile without changing the profile picture
                     userProfileRef.child(currentUserUID).setValue(userProfile)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -169,7 +156,6 @@ public class AccountActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                            // Use the userProfile object to access the user's information
                             String name = userProfile.getName();
                             String jobTitle = userProfile.getJobTitle();
                             String gender = userProfile.getGender();
@@ -181,7 +167,6 @@ public class AccountActivity extends AppCompatActivity {
 
                             String profilePictureUrl = userProfile.getProfilePictureUrl();
                             if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
-                                // Load profile picture using an image loading library
                                 Glide.with(AccountActivity.this)
                                         .load(profilePictureUrl)
                                         .into(profile_picture);
@@ -191,7 +176,6 @@ public class AccountActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Handle errors
                     }
                 });
             }
@@ -241,10 +225,7 @@ public class AccountActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri downloadUrl) {
                                         String imageUrl = downloadUrl.toString();
-                                        // Update the profile picture URL in the user's profile
                                         userProfile.setProfilePictureUrl(imageUrl);
-
-                                        // Update the user profile information in the database
                                         userProfileRef.setValue(userProfile)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
@@ -275,7 +256,6 @@ public class AccountActivity extends AppCompatActivity {
                     }
                 });
     }
-
 
     private void showPopupMenu(ImageButton dropdownButton) {
         PopupMenu popupMenu = new PopupMenu(this, dropdownButton);
